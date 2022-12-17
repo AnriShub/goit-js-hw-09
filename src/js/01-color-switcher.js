@@ -1,7 +1,7 @@
 
 const btnStart = document.querySelector('button[data-start]'); //получаем указатель на кнопку старт
 const btnStop = document.querySelector('button[data-stop]'); //получаем указатель на кнопку стоп
-btnStop.disabled = true; // Блочим кнопку стоп
+btnSwitcher(false, true); 
 btnStart.addEventListener("click", changeBgColor); // вешаем обработчик клика на кнопку Старт
 btnStop.addEventListener("click", stopBgColor); // вешаем обработчик клика на кнопку Стоп
 let timerId; //Объявляем переменную для сохранения значения функции setInterval
@@ -9,9 +9,13 @@ let timerId; //Объявляем переменную для сохранени
 function changeBgColor() { //Объявляем функцию смена цвета бекраунда
   if (!timerId) { //Если timerId - undefined или null - запускаем таймер
     timerId = setInterval(onTime, 1000); //Устанавливаем обработчик onTime с помощью setInterval и сохраняем его значение
-    btnStop.disabled = false; //Разблокируем кнопку Стоп
-    btnStart.disabled = true; //Блочим кнопку Старт
+    btnSwitcher(true, false);
   }
+}
+
+function btnSwitcher(start, stop) {
+  btnStop.disabled = stop; 
+  btnStart.disabled = start;
 }
 
 function getRandomHexColor() { //Объявляем функцию получения рендомного цвета
@@ -25,8 +29,7 @@ function onTime() { //Обработчик события таймера
 function stopBgColor() { //Объявляем функуцию остановки таймера
   clearInterval(timerId);//Останавливаем таймер полученный с помощью setInterval
   timerId = null; //Очищаем таймер
-  btnStop.disabled = true; // Блочим кнопку стоп
-  btnStart.disabled = false; // Разблокируем кнопку старт
+  btnSwitcher(false, true); 
 }
 
 

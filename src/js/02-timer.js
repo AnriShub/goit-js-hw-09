@@ -2,6 +2,16 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
+
+ 
+class Color {
+  black;
+  tomato;
+  constructor() {
+    this.black = "#000";
+    this.tomato = "#ff6347";
+  }
+}
 // Получаем указатели на нужные элементы интерфейса
 const text = document.querySelector('#datetime-picker');
 const timerHtml = document.querySelector('.timer');
@@ -19,7 +29,7 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] < new Date()) {
+    if (selectedDates[0] < Date.now()) {
       Notiflix.Notify.failure('Please choose a date in the future');
       btnStart.disabled = true;
     } else {
@@ -61,23 +71,28 @@ function onClick() {
 }
 //Функция, которая проверяет введенное значение даты и если дата соответствует введенным критериям, обнавляет значение полей вывода (мин, сек и т.д.)
 function onTime() {
-    let countdown = new Date(text.value) - new Date();
+    let countdown = new Date(text.value) - Date.now();
     btnStart.disabled = true;
     if (countdown >= 0) {
-      let timeObject = convertMs(countdown);
-      days.textContent = addLeadingZero(timeObject.days);
-      hours.textContent = addLeadingZero(timeObject.hours);
-      minutes.textContent = addLeadingZero(timeObject.minutes);
-      seconds.textContent = addLeadingZero(timeObject.seconds);
+      updateCounters(countdown);
       if (countdown <= 10000) {
-        timerHtml.style.color = 'tomato';
+        timerHtml.style.color = new Color().tomato;
       }
     } else {
       Notiflix.Notify.success('Countdown finished');
-      timerHtml.style.color = 'black';
+      timerHtml.style.color = new Color().black;
       clearInterval(timerId);
     }
 }
+
 // Установка обработчика событий на кнопку Start
 btnStart.addEventListener('click', onClick);
+
+function updateCounters(countdown) {
+  let timeObject = convertMs(countdown);
+  days.textContent = addLeadingZero(timeObject.days);
+  hours.textContent = addLeadingZero(timeObject.hours);
+  minutes.textContent = addLeadingZero(timeObject.minutes);
+  seconds.textContent = addLeadingZero(timeObject.seconds);
+}
 
